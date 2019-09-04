@@ -18,16 +18,16 @@ function readPlate($path){
     for($i = 1; $i < count($myMap); $i++){
         for($j = 0; $j < strlen($myMap[$i]); $j++){
              if($myMap[$i][$j] == 'o'){
-                $myCopy[$i][$j] = 0;
+                $mapWithNumbers[$i][$j] = 0;
              }
              else{
-                $myCopy[$i][$j] = 1;
+                $mapWithNumbers[$i][$j] = 1;
              }
         }
     }
 
-    giveMeSolution($myCopy);
-    findThePosition($myCopy, $myMap);
+    giveMeSolution($mapWithNumbers);
+    findThePosition($mapWithNumbers, $myMap);
 
     for($i = 1; $i < count($myMap); $i++){
         echo $myMap[$i]."\n";
@@ -35,31 +35,31 @@ function readPlate($path){
 }
 
 
-function giveMeSolution(array &$myMap){
-    for($i = 1; $i < count($myMap); $i++){
-        for($j = 0; $j < count($myMap[$i]); $j++){
+function giveMeSolution(array &$mapWithNumbers){
+    for($i = 1; $i < count($mapWithNumbers); $i++){
+        for($j = 0; $j < count($mapWithNumbers[$i]); $j++){
             if($i  == 1 || $j == 0 ){
                 continue;
             }
-            else if($myMap[$i][$j] > 0){
-                $myMap[$i][$j] = 1 + min([$myMap[$i][$j - 1],
-                                        $myMap[$i - 1][$j],
-                                        $myMap[$i - 1][$j - 1]]);
+            else if($mapWithNumbers[$i][$j] > 0){
+                $mapWithNumbers[$i][$j] = 1 + min([$mapWithNumbers[$i][$j - 1],
+                                        $mapWithNumbers[$i - 1][$j],
+                                        $mapWithNumbers[$i - 1][$j - 1]]);
             }
         }
     }
 }
 
-function findThePosition(&$myMap, &$myCopy){
+function findThePosition(&$mapWithNumbers, &$myMap){
     $max = 0;
     $positon = [];
 
-    for($i = 1; $i < count($myMap); $i++){
-        for($j = 0; $j < count($myMap[$i]); $j++){
-            if($myMap[$i][$j] >= $max){
-                if($myMap[$i][$j] == $max && !empty($positon)){
+    for($i = 1; $i < count($mapWithNumbers); $i++){
+        for($j = 0; $j < count($mapWithNumbers[$i]); $j++){
+            if($mapWithNumbers[$i][$j] >= $max){
+                if($mapWithNumbers[$i][$j] == $max && !empty($positon)){
                     if($positon[0][1] > $j){
-                        $max = $myMap[$i][$j];
+                        $max = $mapWithNumbers[$i][$j];
                         $positon[0][0] = $i;
                         $positon[0][1] = $j;
                         continue;
@@ -68,20 +68,20 @@ function findThePosition(&$myMap, &$myCopy){
                         continue;
                     }
                 }
-                $max = $myMap[$i][$j];
+                $max = $mapWithNumbers[$i][$j];
                 $positon[0][0] = $i;
                 $positon[0][1] = $j;
             }
         }
     }
-    return drawMyCrossedMap($myCopy, $positon, $max);
+    return drawMyCrossedMap($myMap, $positon, $max);
 }
 
 
-function drawMyCrossedMap(&$myCopy, $positon, $occurence){
+function drawMyCrossedMap(&$myMap, $positon, $occurence){
     for($i = $positon[0][0]; $i > $positon[0][0] - $occurence; $i--){
         for($j = $positon[0][1]; $j > $positon[0][1] - $occurence; $j--){
-            $myCopy[$i][$j] = "X";
+            $myMap[$i][$j] = "X";
         }
     }
 }
